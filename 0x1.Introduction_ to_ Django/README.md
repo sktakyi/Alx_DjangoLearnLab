@@ -1,1 +1,1 @@
-Hi
+Hi Django here!
