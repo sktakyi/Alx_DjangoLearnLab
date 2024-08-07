@@ -1,1 +1,1 @@
-Hi welcome to Django into, here we create, configure and run our project!
+Hi welcome to Django intro, here we created, configured and ran our project!
