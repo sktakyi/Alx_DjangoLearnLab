@@ -1,1 +1,8 @@
-Hi welcome to Django intro, here we created, configured and ran our project!
+#
+Hi, welcome to Django intro
+
+##
+Porject creation and configuration
+Virtual Environment creation and configuration 
+URL routing and app creation
+Running django development server 
