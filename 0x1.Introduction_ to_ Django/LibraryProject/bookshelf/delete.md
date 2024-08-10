@@ -1,4 +1,9 @@
-from bookshelf.models import Book
+# Delete Operation
 
+**Command:**
+```python
 book.delete()
 print(Book.objects.all())
+
+# Expected output
+<QuerySet []>
