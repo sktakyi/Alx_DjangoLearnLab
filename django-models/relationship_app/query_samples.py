@@ -21,7 +21,7 @@ def get_books_in_library(library_name):
 # Query 3: Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
     try:
-        librarian = [Librarian.objects.get] (library__name=library_name)
+        librarian = [Librarian.objects.get] (library_name=library_name)
         return librarian.name
     except Librarian.DoesNotExist:
         return None
