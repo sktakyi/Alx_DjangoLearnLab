@@ -14,7 +14,7 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title
-git add django-models;git commit -m "Initial Commit"
+
 # Define the Library model
 class Library(models.Model):
     name = models.CharField(max_length=100)
