@@ -21,12 +21,13 @@ def get_books_in_library(library_name):
 # Query 3: Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
     try:
-        librarian = [Librarian.objects.get] (library_name=library_name)
+        library = Library.objects.get(id=library_id)
+        librarian = Librarian.objects.get(library=library)
         return librarian.name
     except Librarian.DoesNotExist:
         return None
 
-# Example Usage
+
 if __name__ == "__main__":
     print("Books by Author Name:", get_books_by_author("Author Name"))
     print("Books in Library Name:", get_books_in_library("Library Name"))
