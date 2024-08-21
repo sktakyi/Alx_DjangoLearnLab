@@ -51,11 +51,13 @@ def delete_book(request, pk):
 
 # Helper functions for role checks
 
-def is_admin(user):
-    return user.is_authenticated and user.userprofile.role == 'Admin'
+
 
 # Admin View
-@user_passes_test(is_admin)
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+@user_passes_test(is_admin, login_url='login')  # Redirects to login if not passed
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
