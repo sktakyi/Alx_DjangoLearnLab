@@ -7,6 +7,8 @@ from . import views
 from .views import add_book, edit_book, delete_book
 
 
+
+
 urlpatterns = [
     path('add_book/', add_book, name='add_book'),
     path('edit_book/<int:pk>/', edit_book, name='edit_book'),
@@ -18,5 +20,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('admin/', admin_view, name='admin_view'),
     path('librarian/', librarian_view, name='librarian_view'),
-    path('member/', member_view, name='member_view'),  
+    path('member/', member_view, name='member_view'),
 ]
