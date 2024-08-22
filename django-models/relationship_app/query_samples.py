@@ -1,34 +1,26 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
-# Query 1: All books by a specific author
-def get_books_by_author(author_name):
-    try:
-        author = Author.objects.get(name=author_name)
-        books = Book.objects.filter(author=author)
-        return [book.title for book in books]
-    except Author.DoesNotExist:
-        return []
+# Query all books by a specific author.
+def Books_By_Author(author_name):
+    author = Author.objects.get(name=author_name)
+    books_by_author = Book.objects.filter(author=author)
+    
+    print("All Books by the author:")
+    for book in books_by_author:
+        print(book.title)
 
-# Query 2: List all books in a library
-def get_books_in_library(library_name):
-    try:
-        library = Library.objects.get(name=library_name)
-        books = library.books.all()
-        return [book.title for book in books]
-    except Library.DoesNotExist:
-        return []
+# List all books in a library.
+def Books_in_Library(library_name):
+    library = Library.objects.get(name=library_name)
+    books_in_library = library.books.all()
+    
+    print("All Books in the Library")
+    for book in books_in_library:
+        print(book.title)
 
-# Query 3: Retrieve the librarian for a library
-def get_librarian_for_library(library_name):
-    try:
-        library = Library.objects.get(id=library_id)
-        librarian = Librarian.objects.get(library=library)
-        return librarian.name
-    except Librarian.DoesNotExist:
-        return None
+# Retrieve the librarian for a library.
+def Librarian_for_Library(library_name):
+    library = Library.objects.get(name=library_name)
+    librarian = Librarian.objects.get(library=library)
 
-
-if __name__ == "__main__":
-    print("Books by Author Name:", get_books_by_author("Author Name"))
-    print("Books in Library Name:", get_books_in_library("Library Name"))
-    print("Librarian for Library Name:", get_librarian_for_library("Library Name"))
+    print(f"The Librarian for the library is: {librarian.name}")
