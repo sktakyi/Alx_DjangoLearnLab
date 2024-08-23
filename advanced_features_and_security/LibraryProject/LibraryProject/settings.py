@@ -26,16 +26,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-f3n6-urj10&7pco00sf==)^+)nfw215a2ns!4%t4qlyejtw21o'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-SECURE_BROWSER_XSS_FILTER = True
+
+
 X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being framed
-SECURE_CONTENT_TYPE_NOSNIFF = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+SECURE_CONTENT_TYPE_NOSNIFF = True # Prevent browsers from MIME-sniffing the content-type away from the one declared
+SECURE_BROWSER_XSS_FILTER = True # Prevent cross-site scripting attacks by enabling the browser's XSS filter
+SESSION_COOKIE_SECURE = True # Ensure session cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True # Ensure CSRF cookies are only sent over HTTPS
+SECURE_SSL_REDIRECT = True # Redirect all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds, Enforce HTTPS for a specified period (e.g., 1 year)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # Apply all subdomains in HSTS policy
+SECURE_HSTS_PRELOAD = True # Allow browsers to preload this site as HTTPS-only
 
 
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -60,12 +68,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'csp.middleware.CSPMiddleware',
-
 ]
-
+# Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'cdnjs.cloudflare.com')
 CSP_STYLE_SRC = ("'self'", 'cdnjs.cloudflare.com')
+
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
