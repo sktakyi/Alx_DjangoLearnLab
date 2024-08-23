@@ -9,7 +9,6 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-# models.py
 from django.contrib.auth.models import BaseUserManager
 
 class CustomUserManager(BaseUserManager):
@@ -26,4 +25,25 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        return self.create_user(username, email, date_of_birth, profile_photo, password, **extra_fields)
+        return self.create_user(username, email, date_of_birth, profile_photo, password, **extra_fields)        
+
+
+class MyModel(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view model"),
+            ("can_create", "Can create model"),
+            ("can_edit", "Can edit model"),
+            ("can_delete", "Can delete model"),
+        ]
+
+  
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render
+
+@permission_required('app_name.can_edit', raise_exception=True)
+def edit_view(request, pk):
+    # Logic for editing the model instance
+    return render(request, 'edit_template.html')
