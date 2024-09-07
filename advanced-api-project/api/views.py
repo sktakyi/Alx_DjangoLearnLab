@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework 
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter # Import OrderingFilter here
@@ -18,7 +19,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter # Import Orderin
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['title', 'author', 'publication_year'] # Enable filtering by these fields
     search_fields = ['title', 'author'] # Enable search by title and author
     ordering_fields = ['title', 'publication_year'] # Allow ordering by title and publication_year
