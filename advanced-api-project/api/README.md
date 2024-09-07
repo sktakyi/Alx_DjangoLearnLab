@@ -5,3 +5,12 @@
 
 ## Permissions
 - `IsAuthenticatedOrReadOnly`: Unauthenticated users can view data (GET), but only authenticated users can create, update, or delete data (POST/PUT/DELETE).
+
+## Filtering: 
+- GET /api/books/?title=SomeTitle
+
+## Searching:
+- GET /api/books/?search=SomeSearchTerm
+
+## Ordering:
+- GET /api/books/?ordering=title
