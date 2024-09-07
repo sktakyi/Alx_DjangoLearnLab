@@ -7,9 +7,20 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # Latest Django views
+# ListView:
+class BookListView(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title', 'author__name', 'publication_year']  # Enable filtering by these fields
+    search_fields = ['title', 'author__name']  # Enable search by title and author
+    ordering_fields = ['title', 'publication_year']  # Allow ordering by title and publication_year
+
 # ListView: Retrieve all books
 class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
@@ -53,9 +64,6 @@ class BookDeleteView(DeleteView):
     model = Book
     template_name = 'books/book_confirm_delete.html'  # Specify your template path
     success_url = reverse_lazy('book-list')  # Redirect to the book list after a successful deletion
-
-
-
 
 # ListView: Retrieve all books (no authentication required)
 class BookListView(ListView):

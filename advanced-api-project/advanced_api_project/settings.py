@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'api',
+    # other apps
+    'rest_framework',  # Django REST Framework
+    'api',  # Your custom app
+    'django_filters',  # Django Filters for DRF filtering
 ]
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
