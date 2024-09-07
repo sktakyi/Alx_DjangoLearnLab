@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+# Latest Django views
 # ListView: Retrieve all books
 class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
@@ -20,7 +21,7 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]  # Authenticated users can update/delete
 
 
-
+# Traditional Django views
 # ListView: Retrieve all books (GET)
 class BookListView(ListView):
     model = Book
