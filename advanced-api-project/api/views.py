@@ -5,6 +5,7 @@ from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # ListView: Retrieve all books
 class BookListView(generics.ListCreateAPIView):
@@ -18,18 +19,6 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]  # Authenticated users can update/delete
 
-
-# ListView: Retrieve all books (GET) and Create a new book (POST)
-class BookListView(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Unauthenticated users can read, authenticated users can create
-
-# DetailView: Retrieve a single book (GET), Update a book (PUT/PATCH), and Delete a book (DELETE)
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Only authenticated users can update/delete
 
 
 # ListView: Retrieve all books (GET)
@@ -61,3 +50,46 @@ class BookDeleteView(DeleteView):
     model = Book
     template_name = 'books/book_confirm_delete.html'  # Specify your template path
     success_url = reverse_lazy('book-list')  # Redirect to the book list after a successful deletion
+
+
+
+
+# ListView: Retrieve all books (no authentication required)
+class BookListView(ListView):
+    model = Book
+    template_name = 'books/book_list.html'  # Specify your template
+
+# DetailView: Retrieve a single book by ID (no authentication required)
+class BookDetailView(DetailView):
+    model = Book
+    template_name = 'books/book_detail.html'  # Specify your template
+
+# CreateView: Only authenticated users can create books
+class BookCreateView(LoginRequiredMixin, CreateView):
+    model = Book
+    fields = ['title', 'publication_year', 'author']
+    template_name = 'books/book_form.html'
+    success_url = reverse_lazy('book-list')  # Redirect after successful creation
+
+# UpdateView: Only authenticated users can update books
+class BookUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Book
+    fields = ['title', 'publication_year', 'author']
+    template_name = 'books/book_form.html'
+    success_url = reverse_lazy('book-list')  # Redirect after successful update
+
+    # Ensure the user trying to update the book is allowed (customize this logic as needed)
+    def test_func(self):
+        # Customize this logic as per your needs (e.g., owner of the book)
+        return self.request.user.is_authenticated
+
+# DeleteView: Only authenticated users can delete books
+class BookDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Book
+    template_name = 'books/book_confirm_delete.html'
+    success_url = reverse_lazy('book-list')
+
+    # Ensure the user trying to delete the book is allowed (customize this logic as needed)
+    def test_func(self):
+        # Customize this logic as per your needs (e.g., owner of the book)
+        return self.request.user.is_authenticated
