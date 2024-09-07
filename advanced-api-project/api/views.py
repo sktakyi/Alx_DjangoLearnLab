@@ -7,9 +7,12 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter # Import OrderingFilter here
+from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework
+from django_filters import rest_framework 
+
+
 
 # Latest Django views
 # ListView:
