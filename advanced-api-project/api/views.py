@@ -2,14 +2,14 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from rest_framework.filters import SearchFilter, OrderingFilter # Import OrderingFilter here
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.filters import SearchFilter, OrderingFilter # Import OrderingFilter here
 
 
 
@@ -19,9 +19,9 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['title', 'author__name', 'publication_year']  # Enable filtering by these fields
-    search_fields = ['title', 'author__name']  # Enable search by title and author
-    ordering_fields = ['title', 'publication_year']  # Allow ordering by title and publication_year
+    filterset_fields = ['title', 'author', 'publication_year'] # Enable filtering by these fields
+    search_fields = ['title', 'author'] # Enable search by title and author
+    ordering_fields = ['title', 'publication_year'] # Allow ordering by title and publication_year
 
 # ListView: Retrieve all books
 class BookListView(generics.ListCreateAPIView):
