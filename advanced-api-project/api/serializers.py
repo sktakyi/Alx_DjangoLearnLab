@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Author, Book
 from datetime import datetime
 
-
 # BookSerializer: Serializes all fields in the Book model, with custom validation for the publication_year.
 class BookSerializer(serializers.ModelSerializer):
     class Meta:

@@ -11,12 +11,30 @@ class BookListView(generics.ListCreateAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]  # Allow unauthenticated users to read
 
-
 # DetailView: Retrieve a single book by ID
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]  # Authenticated users can update/delete
+
+
+
+from rest_framework import generics
+from .models import Book
+from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+# ListView: Retrieve all books (GET) and Create a new book (POST)
+class BookListView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # Unauthenticated users can read, authenticated users can create
+
+# DetailView: Retrieve a single book (GET), Update a book (PUT/PATCH), and Delete a book (DELETE)
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # Only authenticated users can update/delete
 
 
 
@@ -29,7 +47,7 @@ class BookListView(generics.ListCreateAPIView):
     serializer_class = BookSerializer
 
     def create(self, request, *args, **kwargs):
-        # Add custom validation logic here, if needed
+        # Custom validation to check publication year
         publication_year = request.data.get('publication_year')
         if publication_year and int(publication_year) > datetime.now().year:
             return Response({"error": "Publication year cannot be in the future."},
@@ -41,16 +59,6 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-
-
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-class BookListView(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Authenticated users can create
-
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Authenticated users can update/delete
+    def update(self, request, *args, **kwargs):
+        # Custom update logic or validation can go here
+        return super().update(request, *args, **kwargs)
