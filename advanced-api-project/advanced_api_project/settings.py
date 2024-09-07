@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # other apps
+
+    # Other Apps
     'rest_framework',  # Django REST Framework
     'api',  # Your custom app
     'django_filters',  # Django Filters for DRF filtering
