@@ -80,4 +80,73 @@ login.html: Contains the login form.
 register.html: Contains the registration form.
 profile.html: Displays user profile information and the profile update form.
 Setup Instructions
-Ensure Django's authentication views are properly included:
+Ensure Django's authentication views are properly included
+
+
+
+# Django Blog Post Management
+
+## Features
+
+This application allows users to create, view, update, and delete blog posts. Authentication and permissions are required for certain actions.
+
+### CRUD Operations:
+
+1. **Post List**:
+    - URL: `/posts/`
+    - View: ListView
+    - Shows all blog posts, ordered by the published date.
+
+2. **Post Detail**:
+    - URL: `/posts/<id>/`
+    - View: DetailView
+    - Displays full post content, author, and published date.
+
+3. **Create Post**:
+    - URL: `/post/new/`
+    - View: CreateView
+    - Only authenticated users can create new posts. The post author is automatically set to the logged-in user.
+
+4. **Edit Post**:
+    - URL: `/posts/<id>/edit/`
+    - View: UpdateView
+    - Only the post author can edit their own posts.
+
+5. **Delete Post**:
+    - URL: `/posts/<id>/delete/`
+    - View: DeleteView
+    - Only the post author can delete their own posts.
+
+### Permissions
+
+- **Create Posts**: Only authenticated users can create posts.
+- **Edit/Delete Posts**: Only the post author can edit or delete their own posts.
+- **View Posts**: Any user (authenticated or not) can view the list and detail of blog posts.
+
+### Testing
+
+1. **Test post creation, editing, and deletion** as both the post author and as a different user.
+2. **Ensure form validation** works as expected, and error messages are shown for invalid inputs.
+3. **Verify permissions** for unauthenticated users (ensure they are redirected to the login page).
+4. **Test security**: Ensure all forms are protected using CSRF tokens.
+5. **Navigation**: Check that users are redirected to the correct views after creating, editing, or deleting posts.
+
+## Setup Instructions
+
+1. Clone the repository.
+2. Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. Apply migrations:
+    ```bash
+    python manage.py migrate
+    ```
+4. Run the development server:
+    ```bash
+    python manage.py runserver
+    ```
+
+## Notes
+
+- This application uses Django’s built-in `LoginRequiredMixin` and `UserPassesTestMixin` to manage permissions for post creation, editing, and deletion.
