@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.urls import reverse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from .forms import UserRegisterForm
@@ -93,28 +94,33 @@ def add_comment(request, post_id):
             comment.post = post
             comment.author = request.user
             comment.save()
-            return redirect('post_detail', pk=post_id)
+            return redirect(reverse('post-detail', kwargs={'pk': post_id}))
     else:
         form = CommentForm()
-    return render(request, 'blog/add_comment.html', {'form': form})
+    return render(request, 'blog/add_comment.html', {'form': form, 'post': post})
 
+# Comment Update View
 @login_required
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-    if request.user != comment.author:
-        return redirect('post_detail', pk=comment.post.id)
+    if comment.author != request.user:
+        return redirect(reverse('post-detail', kwargs={'pk': comment.post.id}))
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('post_detail', pk=comment.post.id)
+            return redirect(reverse('post-detail', kwargs={'pk': comment.post.id}))
     else:
         form = CommentForm(instance=comment)
-    return render(request, 'blog/edit_comment.html', {'form': form})
+    return render(request, 'blog/edit_comment.html', {'form': form, 'comment': comment})
 
+# Comment Delete View
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-    if request.user == comment.author:
+    if comment.author != request.user:
+        return redirect(reverse('post-detail', kwargs={'pk': comment.post.id}))
+    if request.method == 'POST':
         comment.delete()
-    return redirect('post_detail', pk=comment.post.id)
+        return redirect(reverse('post-detail', kwargs={'pk': comment.post.id}))
+    return render(request, 'blog/delete_comment.html', {'comment': comment})
