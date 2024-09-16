@@ -19,5 +19,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),
+    path('blog/', include('blog.urls')),  # Include URLs from the blog app
+    path('', include('blog.urls')),  # You can redirect the root URL to blog
 ]
