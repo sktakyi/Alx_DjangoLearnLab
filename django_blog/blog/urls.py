@@ -24,4 +24,8 @@ urlpatterns = [
     path('posts/<int:post_id>/comments/new/', add_comment, name='add_comment'),
     path('comments/<int:comment_id>/edit/', edit_comment, name='edit_comment'),
     path('comments/<int:comment_id>/delete/', delete_comment, name='delete_comment'),
+
+    # Searching & Tagging URLs
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='tagged_posts'),
+    path('search/', search_posts, name='search_posts'),
 ]
