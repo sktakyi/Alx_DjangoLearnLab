@@ -2,10 +2,18 @@
 Hi, welcome to Django intro
 
 ##
-Porject creation and configuration
+Project creation & app creation 
 
 Virtual environment creation and configuration 
 
-URL routing and app creation
+Dynanmic URL routing
 
-Running django development server 
+Register, login, logout setup & configuration
+
+Web security
+
+MTV models - templates - views
+
+Running django development server (Migrations configurations - sqlite3 db /postgresql db)
+
+API development (DRF)
