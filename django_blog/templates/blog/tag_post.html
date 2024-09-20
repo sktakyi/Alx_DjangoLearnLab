@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Posts tagged with "{{ tag.name }}"</h1>
+{% for post in posts %}
+    <article>
+        <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        <p>{{ post.content|truncatewords:30 }}</p>
+    </article>
+{% empty %}
+    <p>No posts found with this tag.</p>
+{% endfor %}
+{% endblock content %}
