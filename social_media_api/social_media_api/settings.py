@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     # other installed apps,
     'accounts',
+    'posts',
+    'notificatons',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters', 
