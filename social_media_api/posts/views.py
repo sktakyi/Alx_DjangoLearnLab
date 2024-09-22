@@ -11,7 +11,7 @@ from notifications.models import Notification
 def like_post(request, post_id):
     """View to handle liking a post."""
     # Get the post object using get_object_or_404
-    post = generics.get_object_or_404(Post, pk=post_id)
+    post = generics.get_object_or_404(Post, pk=pk)
     
     # Create or get the Like object
     like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -34,7 +34,7 @@ def like_post(request, post_id):
 def unlike_post(request, post_id):
     """View to handle unliking a post."""
     # Get the post object using get_object_or_404
-    post = generics.get_object_or_404(Post, pk=post_id)
+    post = generics.get_object_or_404(Post, pk=pk)
     
     # Try to find the like and delete it if it exists
     try:
