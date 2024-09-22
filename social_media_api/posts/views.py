@@ -1,9 +1,10 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, views
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification
+from rest_framework.permissions import IsAuthenticated
 
 # Viewset for Post Model
 class PostViewSet(viewsets.ModelViewSet):
@@ -17,8 +18,16 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Handle the creation of a new post and add custom logic."""
         post = serializer.save(author=self.request.user)
-        # You can add custom logic here, like sending notifications
+        # Custom logic such as notifications can be added here
         return post
+
+    # Add a custom action to retrieve posts from followed users
+    def list_followed_posts(self, request):
+        """Retrieve posts by users the current user follows."""
+        following_users = request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=200)
 
 # Viewset for Comment Model
 class CommentViewSet(viewsets.ModelViewSet):
