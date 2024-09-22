@@ -25,7 +25,6 @@ class CommentSerializer(serializers.ModelSerializer):
         validated_data['author'] = self.context['request'].user
         return super().create(validated_data)
         
-
 # Post serializer class
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
@@ -47,5 +46,3 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = ['id', 'user', 'post']
         
-
-    

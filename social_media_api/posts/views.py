@@ -1,45 +1,74 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import generics, views, status
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes
-from .models import Post, Like
+from django.shortcuts import get_object_or_404
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification
 
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
-def like_post(request, post_id):
-    """View to handle liking a post."""
-    # Get the post object using get_object_or_404
-    post = generics.get_object_or_404(Post, pk=pk)
-    
-    # Create or get the Like object
-    like, created = Like.objects.get_or_create(user=request.user, post=post)
-    
-    if created:
-        # If it's a new like, create a notification
+# Viewset for Post Model
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing post instances.
+    """
+    queryset = Post.objects.all()  # Fetch all posts
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        """Handle the creation of a new post and add custom logic."""
+        post = serializer.save(author=self.request.user)
+        # You can add custom logic here, like sending notifications
+        return post
+
+# Viewset for Comment Model
+class CommentViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing comment instances.
+    """
+    queryset = Comment.objects.all()  # Fetch all comments
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        """Handle the creation of a new comment."""
+        post = get_object_or_404(Post, pk=self.request.data.get('post_id'))
+        comment = serializer.save(user=self.request.user, post=post)
+        # Add a notification to the post author when a comment is created
         Notification.objects.create(
             recipient=post.author,
-            actor=request.user,
-            verb='liked your post',
+            actor=self.request.user,
+            verb='commented on your post',
             target=post
         )
-        return Response({'message': f'You liked {post.title}'}, status=status.HTTP_200_OK)
-    else:
-        # If the like already exists
-        return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+        return comment
 
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
-def unlike_post(request, post_id):
-    """View to handle unliking a post."""
-    # Get the post object using get_object_or_404
-    post = generics.get_object_or_404(Post, pk=pk)
-    
-    # Try to find the like and delete it if it exists
-    try:
-        like = Like.objects.get(user=request.user, post=post)
-        like.delete()
-        return Response({'message': f'You unliked {post.title}'}, status=status.HTTP_200_OK)
-    except Like.DoesNotExist:
-        return Response({'message': 'You have not liked this post yet.'}, status=status.HTTP_400_BAD_REQUEST)
+# Additional views for liking/unliking a post
+class LikePostView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        """Like a post."""
+        post = get_object_or_404(Post, pk=post_id)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if created:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post
+            )
+            return Response({'message': 'Post liked successfully'}, status=200)
+        return Response({'message': 'You already liked this post'}, status=400)
+
+class UnlikePostView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        """Unlike a post."""
+        post = get_object_or_404(Post, pk=post_id)
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return Response({'message': 'Post unliked successfully'}, status=200)
+        except Like.DoesNotExist:
+            return Response({'message': 'You have not liked this post yet'}, status=400)
