@@ -6,9 +6,8 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import CustomUserSerializer, LoginSerializer
+from notifications.models import Notification
 
-
-# Register APIView
 class RegisterAPIView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -20,7 +19,6 @@ class RegisterAPIView(generics.CreateAPIView):
         user = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-# Login APIView
 class LoginAPIView(views.APIView):
     serializer_class = LoginSerializer
     permission_classes = [permissions.AllowAny]
@@ -33,7 +31,6 @@ class LoginAPIView(views.APIView):
         login(request, user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# Profile APIView
 class ProfileAPIView(views.APIView):
     def get(self, request):
         serializer = CustomUserSerializer(request.user)
@@ -47,7 +44,7 @@ class ProfileAPIView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Only when user login
+# A view to follow a user only when logged-in
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def follow_user(request, user_id):
@@ -55,6 +52,12 @@ def follow_user(request, user_id):
         user_to_follow = CustomUser.objects.get(id=user_id)
         if request.user != user_to_follow:
             request.user.following.add(user_to_follow)
+            Notification.objects.create(
+                recipient=user_to_follow,
+                actor=request.user,
+                verb='started following you',
+                target = user_to_follow
+            )
             return Response({'message': f'You are now following {user_to_follow.username}'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'You cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
@@ -70,3 +73,5 @@ def unfollow_user(request, user_id):
         return Response({'message': f'You have unfollowed {user_to_unfollow.username}'}, status=status.HTTP_200_OK)
     except CustomUser.DoesNotExist:
         return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
