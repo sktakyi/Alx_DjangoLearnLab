@@ -115,11 +115,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'alx-social-media-api',
+        'USER': 'alx-social-media-api-admin',
+        'PASSWORD': '0558218264',
+        'HOST': 'localhost',  # Or the IP address where your DB is hosted
+        'PORT': '5432',       # Default PostgreSQL port
     }
 }
-
 
 # Custom user model
 
