@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,10 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # other installed apps,
+    # OTHER APPS,
     'accounts',
     'posts',
-    'notificatons',
+    'notifications',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters', 
@@ -116,8 +118,8 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'alx-social-media-api',
-        'USER': 'alx-social-media-api-admin',
+        'NAME': 'alx_social_media_api',
+        'USER': 'alx_social_media_api_admin',
         'PASSWORD': '0558218264',
         'HOST': 'localhost',  # Or the IP address where your DB is hosted
         'PORT': '5432',       # Default PostgreSQL port
@@ -163,7 +165,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+# Production settings
+STATIC_ROOT = '/home/sktakyi/alx_social_media_api/static/'
+MEDIA_ROOT = '/home/sktakyi/alx_social_media_api/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

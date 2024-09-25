@@ -6,6 +6,7 @@ from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification
 from rest_framework.permissions import IsAuthenticated
 
+
 # Viewset for Post Model
 class PostViewSet(viewsets.ModelViewSet):
     """
